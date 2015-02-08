@@ -61,11 +61,9 @@ var viewModel = function() {
   var initMap = function() {
     //create map
     var mapOptions = {
-      center: { lat: 38.633391,
-         lng: -90.200547},
-      zoom: 11,
       disableDefaultUI: true
     };
+
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     bounds = new google.maps.LatLngBounds();
@@ -73,26 +71,34 @@ var viewModel = function() {
     //add markers
     var markerList = model.markers;
     for(var x = 0; x < markerList.length; x++) {
-      //TODO: research delayed marker drop
-      //setTimeout(function() {
-        var markPos = new google.maps.LatLng(
-          markerList[x].lat,
-          markerList[x].lng
-        );
-        var marker = new google.maps.Marker({
-          position: markPos,
-          map: map,
-          title: markerList[x].title,
-          animation: google.maps.Animation.DROP
-        });
-        bounds.extend(markPos);
-        map.fitBounds(bounds);
-        map.setCenter(bounds.getCenter());
-      //}, x * 200);
-    }
-  };
+      var markPos = new google.maps.LatLng(
+        markerList[x].lat,
+        markerList[x].lng
+      );
 
-initMap();
+      var marker = new google.maps.Marker({
+        position: markPos,
+        map: map,
+        title: markerList[x].title,
+        animation: google.maps.Animation.DROP
+      });
+
+      var infowindow = new google.maps.InfoWindow({
+        content: null
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(this.title)
+        infowindow.open(map, this);
+      });
+
+      bounds.extend(markPos);
+      map.fitBounds(bounds);
+      map.setCenter(bounds.getCenter());
+    }
+  }();
+
+  //initMap();
 };
 
 ko.applyBindings(new viewModel());
