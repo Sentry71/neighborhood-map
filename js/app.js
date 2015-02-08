@@ -26,11 +26,6 @@ var model = {
       lat: 38.573845,
       lng: -90.405244
     },
-    // {
-    //   title: 'Meramec Caverns',
-    //   lat: 38.245292,
-    //   lng: -91.090536
-    // },
     {
       title: 'Missouri History Museum',
       lat: 38.645254,
@@ -98,7 +93,6 @@ var viewModel = function() {
     }
   }();
 
-  //initMap();
 };
 
 ko.applyBindings(new viewModel());
