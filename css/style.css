@@ -14,11 +14,11 @@ body {
 }
 #pointList {
   position: fixed;
-  left: 10px;
-  top: 10px;
+  right: 10px;
+  bottom: 10px;
   width: 25%;
-  height: 100px;
   background-color: navy;
   color: white;
-  font-size: 1.2em;
+  font-family: 'Roboto', sans-serif;
+  padding: 5px;
 }
