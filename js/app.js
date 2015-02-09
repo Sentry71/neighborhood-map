@@ -52,6 +52,8 @@ var model = {
 var viewModel = function() {
   var map, bounds, markerArray;
 
+  var self = this;
+
   //Initialize map location, set as IIFE to kick off immediately
   var initMap = function() {
     //create map
@@ -63,7 +65,7 @@ var viewModel = function() {
 
     bounds = new google.maps.LatLngBounds();
 
-    markerArray = ko.observableArray();
+    self.markerArray = ko.observableArray();
 
     //add markers
     var markerList = model.markers;
@@ -93,9 +95,9 @@ var viewModel = function() {
       map.fitBounds(bounds);
       map.setCenter(bounds.getCenter());
 
-      markerArray.push(marker);
+      self.markerArray.push(marker);
     }
-    console.log(markerArray());
+    //console.log(markerArray());
   }();
 
 
