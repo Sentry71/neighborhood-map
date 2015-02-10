@@ -100,26 +100,26 @@ var viewModel = function() {
     //console.log(markerArray());
   }();
 
-  // search box
+  // search filter
   self.query = ko.observable('');
 
-  self.search = ko.computed({
-    read: function() {
-      var allMarkers = self.markerArray(), selected = [];
-      for (var i = 0; i < allMarkers.length; i++) {
-        var current = allMarkers[i];
-        if(current.title.toLowerCase().indexOf(self.query().toLowerCase()) >= 0) {
-          selected.push(allMarkers[i]);
-        }
-      }
-      console.log(selected);
-    },
-    write: function(selected) {
-      self.markerArray(selected) ;
-    },
-    owner: self
-  });
+  self.filteredArray = ko.computed(function() {
+    return ko.utils.arrayFilter(self.markerArray(), function(marker) {
+      return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) !== -1;
+    });
+  }, self);
 
+  //add or remove markers when search returns
+  self.filteredArray.subscribe(function() {
+    var diffArray = ko.utils.compareArrays(self.markerArray(), self.filteredArray());
+    ko.utils.arrayForEach(diffArray, function(marker) {
+      if (marker.status === 'deleted') {
+        marker.value.setMap(null);
+      } else {
+        marker.value.setMap(map);
+      }
+    });
+  });
 };
 
 ko.applyBindings(new viewModel());
