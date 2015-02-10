@@ -16,9 +16,25 @@ body {
   position: fixed;
   right: 10px;
   bottom: 10px;
-  width: 25%;
-  background-color: navy;
-  color: white;
   font-family: 'Roboto', sans-serif;
-  padding: 5px;
+}
+ul {
+  list-style: none;
+}
+ul li {
+  display:block;
+  text-decoration:none;
+  color:#000000;
+  background-color:#FFFFFF;
+  line-height:30px;
+  border-bottom:solid 1px #CCCCCC;
+  padding:0 10px;
+  cursor:pointer;
+}
+.selected, ul li:hover {
+  color:#FFFFFF;
+  background-color:rgb(44,112,237);
+  -ms-transform: translateX(-10px);
+  -webkit-transform: translateX(-10px);
+  transform: translateX(-10px);
 }
