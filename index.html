@@ -12,6 +12,7 @@
   <body>
     <div id="map-canvas"></div>
     <div id="pointList">
+      <input type="search" placeholder="Search..." data-bind="textInput: query" />
       <ul data-bind="foreach: markerArray">
         <li data-bind="text: title"></li>
       </ul>
