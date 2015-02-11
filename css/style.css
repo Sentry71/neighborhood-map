@@ -38,3 +38,15 @@ ul li {
   -webkit-transform: translateX(-10px);
   transform: translateX(-10px);
 }
+input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  font-family: 'Roboto', sans-serif;
+  display: block;
+  line-height: 30px;
+  font-size: 1.0em;
+  padding:0 10px;
+  margin-left: 39px;
+  margin-bottom: -16px;
+  width: 85%;
+}
