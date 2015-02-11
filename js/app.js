@@ -67,6 +67,18 @@ var viewModel = function() {
 
     self.markerArray = ko.observableArray();
 
+    //custom marker
+    var image = {
+      url: 'img/mike-miriam-marker-50.png',
+      size: new google.maps.Size(87, 43),
+      origin: new google.maps.Point(0,0),
+      anchor: new google.maps.Point(44, 43)
+    };
+    var shape = {
+      coords: [1,1,86,1,86,42,1,42],
+      type: 'poly'
+    };
+
     //add markers
     var markerList = model.markers;
     for(var x = 0; x < markerList.length; x++) {
@@ -78,8 +90,10 @@ var viewModel = function() {
       var marker = new google.maps.Marker({
         position: markPos,
         map: map,
-        title: markerList[x].title,
-        animation: google.maps.Animation.DROP
+        icon: image,
+        shape: shape,
+        title: markerList[x].title
+        //animation: google.maps.Animation.DROP
       });
 
       var infowindow = new google.maps.InfoWindow({
