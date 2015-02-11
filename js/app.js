@@ -69,15 +69,26 @@ var viewModel = function() {
 
     //custom marker
     var image = {
-      url: 'img/mike-miriam-marker-50.png',
-      size: new google.maps.Size(87, 43),
-      origin: new google.maps.Point(0,0),
-      anchor: new google.maps.Point(44, 43)
+      url: 'img/marker-50.png',
+      size: new google.maps.Size(14, 30),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(6, 28)
     };
     var shape = {
-      coords: [1,1,86,1,86,42,1,42],
+      coords: [1,1,13,1,13,29,1,29],
       type: 'poly'
     };
+
+    // var image2 = {
+    //   url: 'img/mike-miriam-marker-50.png',
+    //   size: new google.maps.Size(87, 43),
+    //   origin: new google.maps.Point(0, 0),
+    //   anchor: new google.maps.Point(41, 39)
+    // };
+    // var shape2 = {
+    //   coords: [1,1,86,1,86,42,1,42],
+    //   type: 'poly'
+    // };
 
     //add markers
     var markerList = model.markers;
@@ -93,7 +104,7 @@ var viewModel = function() {
         icon: image,
         shape: shape,
         title: markerList[x].title
-        //animation: google.maps.Animation.DROP
+        //animation: google.maps.Animation.BOUNCE
       });
 
       var infowindow = new google.maps.InfoWindow({
@@ -111,7 +122,7 @@ var viewModel = function() {
 
       self.markerArray.push(marker);
     }
-    //console.log(markerArray());
+    //console.log(self.markerArray());
   }();
 
   // search filter
