@@ -79,16 +79,16 @@ var viewModel = function() {
       type: 'poly'
     };
 
-    // var image2 = {
-    //   url: 'img/mike-miriam-marker-50.png',
-    //   size: new google.maps.Size(87, 43),
-    //   origin: new google.maps.Point(0, 0),
-    //   anchor: new google.maps.Point(41, 39)
-    // };
-    // var shape2 = {
-    //   coords: [1,1,86,1,86,42,1,42],
-    //   type: 'poly'
-    // };
+    var image2 = {
+      url: 'img/mike-miriam-marker-50.png',
+      size: new google.maps.Size(87, 43),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(41, 39)
+    };
+    var shape2 = {
+      coords: [1,1,86,1,86,42,1,42],
+      type: 'poly'
+    };
 
     //add markers
     var markerList = model.markers;
@@ -112,8 +112,14 @@ var viewModel = function() {
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(this.title)
+        infowindow.setContent(this.title);
         infowindow.open(map, this);
+        for(var x = 0; x < self.markerArray().length; x++){
+          self.markerArray()[x].setIcon(image);
+          self.markerArray()[x].setShape(shape);
+        }
+        this.setIcon(image2);
+        this.setShape(shape2);
       });
 
       bounds.extend(markPos);
@@ -145,6 +151,17 @@ var viewModel = function() {
       }
     });
   });
+
+
+
+  //highlight marker if list item clicked
+  self.selectItem = function(listItem) {
+    google.maps.event.trigger(listItem, 'click');
+  };
+
+  //TODO: highlight list item when marker clicked
+
+
 };
 
 ko.applyBindings(new viewModel());
