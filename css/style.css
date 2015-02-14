@@ -20,6 +20,7 @@ body {
 }
 ul {
   list-style: none;
+  /*background-color: rgb(44,112,237);*/
 }
 ul li {
   display:block;
@@ -34,9 +35,10 @@ ul li {
 .selected, ul li:hover {
   color:#FFFFFF;
   background-color:rgb(44,112,237);
-  -ms-transform: translateX(-10px);
-  -webkit-transform: translateX(-10px);
-  transform: translateX(-10px);
+  /*border-bottom: none;
+  -ms-transform: translateX(-39px);
+  -webkit-transform: translateX(-39px);
+  transform: translateX(-39px);*/
 }
 input {
   -moz-appearance: none;
@@ -45,8 +47,10 @@ input {
   display: block;
   line-height: 30px;
   font-size: 1.0em;
-  padding:0 10px;
   margin-left: 39px;
   margin-bottom: -16px;
-  width: 85%;
+  width: 86%;
+}
+.title {
+  font-weight: bold;
 }
