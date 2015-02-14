@@ -51,3 +51,6 @@ input {
   margin-bottom: -16px;
   width: 86%;
 }
+.title {
+  font-weight: bold;
+}
