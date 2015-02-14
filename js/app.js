@@ -5,61 +5,71 @@ var model = {
       title: 'The Butterfly House',
       lat: 38.664657,
       lng: -90.542851,
-      url: 'http://www.butterflyhouse.org'
+      url: 'http://www.butterflyhouse.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'Missouri Botanical Garden',
       lat: 38.612775,
       lng: -90.259374,
-      url: 'http://www.mobot.org'
+      url: 'http://www.mobot.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'City Museum',
       lat: 38.633314,
       lng: -90.200536,
-      url: 'http://www.citymuseum.org'
+      url: 'http://www.citymuseum.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'Endangered Wolf Center',
       lat: 38.526445,
       lng: -90.560390,
-      url: 'http://www.endangeredwolfcenter.org'
+      url: 'http://www.endangeredwolfcenter.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'The Gateway Arch',
       lat: 38.624683,
       lng: -90.184781,
-      url: 'http://www.gatewayarch.com'
+      url: 'http://www.gatewayarch.com',
+      highlight: ko.observable(false)
     },
     {
       title: 'The Magic House',
       lat: 38.573856,
       lng: -90.405283,
-      url: 'http://www.magichouse.org'
+      url: 'http://www.magichouse.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'Missouri History Museum',
       lat: 38.645217,
       lng: -90.285807,
-      url: 'http://www.mohistory.org'
+      url: 'http://www.mohistory.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'St Louis Science Center',
       lat: 38.628792,
       lng: -90.270615,
-      url: 'http://www.slsc.org'
+      url: 'http://www.slsc.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'St Louis Zoo',
       lat: 38.634994,
       lng: -90.290656,
-      url: 'http://www.stlzoo.org'
+      url: 'http://www.stlzoo.org',
+      highlight: ko.observable(false)
     },
     {
       title: 'World Bird Sanctuary',
       lat: 38.536396,
       lng: -90.533813,
-      url: 'http://www.worldbirdsanctuary.org'
+      url: 'http://www.worldbirdsanctuary.org',
+      highlight: ko.observable(false)
     }
   ]
 };
@@ -126,41 +136,44 @@ var viewModel = function() {
         icon: image,
         shape: shape,
         title: markerList[x].title,
-        url: markerList[x].url
+        url: markerList[x].url,
+        highlight: markerList[x].highlight
         //animation: google.maps.Animation.BOUNCE
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        var name = this.title;
-        var url = this.url;
-        geocoder.geocode({'latLng': this.position}, function(results, status) {
+        // var name = this.title;
+        // var url = this.url;
+        var that = this;
+        geocoder.geocode({'latLng': that.position}, function(results, status) {
           if(status == google.maps.GeocoderStatus.OK) {
             if (results[0]){
               var address = results[0].formatted_address;
               var split = address.indexOf(',');
-              infowindow.setContent("<span class='title'>" + name
+              infowindow.setContent("<span class='title'>" + that.title
                 + "</span><br>" + address.slice(0,split) + "<br>"
                 + (address.slice(split+1).replace(', USA',''))
-                + "<br><a href=" + url + ">" + url + "</a>");
+                + "<br><a href=" + that.url + ">" + that.url + "</a>");
             }
           } else {
-            infowindow.setContent("<span class='title'>" + name
+            infowindow.setContent("<span class='title'>" + that.title
               + "</span><br>" +  "Unable to pull address at this time");
           }
         });
-        infowindow.open(map, this);
+        infowindow.open(map, that);
 
         for(var x = 0; x < self.markerArray().length; x++){
           self.markerArray()[x].setIcon(image);
           self.markerArray()[x].setShape(shape);
+          self.markerArray()[x].highlight(false);
         }
         this.setIcon(image2);
         this.setShape(shape2);
+        this.highlight(true);
       });
 
       bounds.extend(markPos);
       map.fitBounds(bounds);
-
 
       self.markerArray.push(marker);
     }
@@ -193,9 +206,6 @@ var viewModel = function() {
   self.selectItem = function(listItem) {
     google.maps.event.trigger(listItem, 'click');
   };
-
-  //TODO: highlight list item when marker clicked
-
 
 };
 
