@@ -119,12 +119,19 @@ var viewModel = function() {
       content: null
     });
 
-
+    function clearMarkers() {
+      for(var x = 0; x < self.markerArray().length; x++){
+        self.markerArray()[x].setIcon(image);
+        self.markerArray()[x].setShape(shape);
+        self.markerArray()[x].highlight(false);
+      }
+    };
 
     //add markers
     var markerList = model.markers;
+
+
     for(var x = 0; x < markerList.length; x++) {
-      var geoAddress;
       var markPos = new google.maps.LatLng(
         markerList[x].lat,
         markerList[x].lng
@@ -161,15 +168,15 @@ var viewModel = function() {
           }
         });
         infowindow.open(map, that);
+        clearMarkers();
 
-        for(var x = 0; x < self.markerArray().length; x++){
-          self.markerArray()[x].setIcon(image);
-          self.markerArray()[x].setShape(shape);
-          self.markerArray()[x].highlight(false);
-        }
         this.setIcon(image2);
         this.setShape(shape2);
         this.highlight(true);
+      });
+
+      google.maps.event.addListener(infowindow, 'closeclick', function () {
+        clearMarkers();
       });
 
       bounds.extend(markPos);

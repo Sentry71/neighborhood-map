@@ -13,6 +13,7 @@
   <body>
     <div id="map-canvas"></div>
     <div id="pointList">
+
       <input class="search" type="search" placeholder="Filter List" data-bind="textInput: query" />
       <ul data-bind="foreach: filteredArray">
         <li data-bind="text: title, click: $parent.selectItem, css: {'selected': highlight()}"></li>
