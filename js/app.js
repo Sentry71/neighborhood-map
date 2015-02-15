@@ -190,7 +190,6 @@ var viewModel = function() {
 
   // search filter
   self.query = ko.observable('');
-
   self.filteredArray = ko.computed(function() {
     return ko.utils.arrayFilter(self.markerArray(), function(marker) {
       return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) !== -1;
@@ -212,6 +211,12 @@ var viewModel = function() {
   //highlight marker if list item clicked
   self.selectItem = function(listItem) {
     google.maps.event.trigger(listItem, 'click');
+  };
+
+  //toggle showing marker list
+  self.showList = ko.observable(true);
+  self.toggleList = function() {
+    self.showList(!self.showList());
   };
 
 };

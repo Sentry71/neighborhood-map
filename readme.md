@@ -14,6 +14,8 @@ The screen will show a Google Map of St. Louis, Missouri, with several locations
 
 The user can also limit the number of displayed markers by typing into the Filter List box above the list. This will narrow the markers down to display matching titles only.
 
+Clicking on the down arrow above the list will hide it. Clicking on the up arrow will display the list.
+
 A box will pop up over the chosen marker, giving some information about the location.  Pictures related to the location are pulled from Flickr photo feeds and displayed for the user.
 
 ### APIs Used
