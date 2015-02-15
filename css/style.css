@@ -12,6 +12,9 @@ body {
 .gm-style-iw{
     white-space: nowrap;
 }
+.title {
+  font-weight: bold;
+}
 #pointList {
   position: fixed;
   right: 10px;
@@ -20,7 +23,6 @@ body {
 }
 ul {
   list-style: none;
-  /*background-color: rgb(44,112,237);*/
 }
 ul li {
   display:block;
@@ -35,10 +37,16 @@ ul li {
 .selected, ul li:hover {
   color:#FFFFFF;
   background-color:rgb(44,112,237);
-  /*border-bottom: none;
-  -ms-transform: translateX(-39px);
-  -webkit-transform: translateX(-39px);
-  transform: translateX(-39px);*/
+}
+#list-toggle {
+  float: right;
+  padding: 5px;
+  width: 223px;
+  text-align: center;
+  font-size: 2.0em;
+  background-color: rgb(44,112,237);
+  color: white;
+  cursor: pointer;
 }
 input {
   -moz-appearance: none;
@@ -51,6 +59,9 @@ input {
   margin-bottom: -16px;
   width: 86%;
 }
-.title {
-  font-weight: bold;
+#flickr {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -22px;
 }
