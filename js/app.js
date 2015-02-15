@@ -75,7 +75,7 @@ var model = {
 };
 
 var viewModel = function() {
-  var map, bounds, markerArray;
+  //var map, geocoder, bounds, markerArray;
 
   var self = this;
 
@@ -170,13 +170,18 @@ var viewModel = function() {
         infowindow.open(map, that);
         clearMarkers();
 
-        this.setIcon(image2);
-        this.setShape(shape2);
-        this.highlight(true);
+        that.setIcon(image2);
+        that.setShape(shape2);
+        that.highlight(true);
+
+        map.panTo(that.position);
+        model.markers.currentMarker = that;
       });
 
-      google.maps.event.addListener(infowindow, 'closeclick', function () {
+      google.maps.event.addListener(infowindow, 'closeclick', function() {
         clearMarkers();
+        //reset map view
+        map.fitBounds(bounds);
       });
 
       bounds.extend(markPos);
@@ -218,6 +223,8 @@ var viewModel = function() {
   self.toggleList = function() {
     self.showList(!self.showList());
   };
+
+  //get Flickr photos to match location
 
 };
 
