@@ -1,5 +1,5 @@
 var model = {
-  currentMarker: null,
+  currentMarker: ko.observable(null),
   markers: [
     {
       title: 'The Butterfly House',
@@ -125,6 +125,7 @@ var viewModel = function() {
         self.markerArray()[x].setShape(shape);
         self.markerArray()[x].highlight(false);
       }
+      model.currentMarker(null);
     };
 
     //add markers
@@ -160,11 +161,14 @@ var viewModel = function() {
               infowindow.setContent("<span class='title'>" + that.title
                 + "</span><br>" + address.slice(0,split) + "<br>"
                 + (address.slice(split+1).replace(', USA',''))
-                + "<br><a href=" + that.url + ">" + that.url + "</a>");
+                + "<br><a href=" + that.url + ">" + that.url + "</a><br>"
+                //+ "<span class='right'><img src='https://s.yimg.com/pw/images/goodies/white-flickr.png'/>"
+                );
             }
           } else {
             infowindow.setContent("<span class='title'>" + that.title
-              + "</span><br>" +  "Unable to pull address at this time");
+              + "</span><br>" +  "Unable to pull address at this time"
+              + "<br><a href=" + that.url + ">" + that.url + "</a><br>");
           }
         });
         infowindow.open(map, that);
@@ -175,7 +179,7 @@ var viewModel = function() {
         that.highlight(true);
 
         map.panTo(that.position);
-        model.markers.currentMarker = that;
+        model.currentMarker(that);
       });
 
       google.maps.event.addListener(infowindow, 'closeclick', function() {
@@ -225,6 +229,42 @@ var viewModel = function() {
   };
 
   //get Flickr photos to match location
+  self.currentPhotos = ko.observableArray();
+  self.getPictures = function() {
+    var marker = model.currentMarker();
+    if(marker !== null) {
+      var textSearch = marker.title.replace(' ','+');
+      //create search url
+      var searchUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=e5ab12886fb2384e5e64692cf37c506a&text='
+        + textSearch + '&license=1%2C2%2C3%2C4%2C5%2C6%2C7&content_type=1&lat=' + marker.position.lat()
+        + '&lon=' + marker.position.lng() + '&radius=1&radius_units=km&per_page=10&page=1&format=json&nojsoncallback=1';
+
+      //console.log(searchUrl);
+      $.getJSON(searchUrl)
+        .done(function(data){
+          parseSearchResults(data);
+
+      })
+      .fail(function(jqxhr, textStatus, error) {
+        console.log(textStatus + ' ' + error);
+      });
+
+      //console.log(model.currentMarker());
+      //console.log("get pics " + searchUrl);
+    } else {
+      console.log("no location chosen");
+    }
+  }
+
+  function parseSearchResults(data) {
+    $.each(data.photos.photo, function(i, photo) {
+      var photoLink = 'https://farm' + photo.farm + '.staticflickr.com/'
+        + photo.server + '/' + photo.id + '_' + photo.secret + '.jpg';
+      self.currentPhotos()[i] = photoLink;
+    });
+    //console.log(self.currentPhotos());
+  };
+
 
 };
 

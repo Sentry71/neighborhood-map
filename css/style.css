@@ -65,3 +65,6 @@ input {
   left: 50%;
   margin-left: -22px;
 }
+.right {
+  float: right;
+}
