@@ -25,10 +25,34 @@
 
 .icon-arrow-right2:before {
   content: "\e600";
+  width: 30px;
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  background-color: rgb(44,112,237);
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 29px;
+  text-align: center;
+  text-decoration: none;
 }
 
 .icon-arrow-left2:before {
   content: "\e601";
+  width: 30px;
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  background-color: rgb(44,112,237);
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 29px;
+  text-align: center;
+  text-decoration: none;
 }
 
 .icon-arrow-up:before {

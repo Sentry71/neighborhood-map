@@ -230,42 +230,72 @@ var viewModel = function() {
 
   //get Flickr photos to match location
   self.currentPhotos = ko.observableArray();
+  self.lightboxVisible = ko.observable(false);
+  self.nextArrowVisible = ko.observable(true);
+  self.prevArrowVisible = ko.observable(true);
+  self.lightboxUrl = ko.observable();
   self.getPictures = function() {
     var marker = model.currentMarker();
     if(marker !== null) {
       var textSearch = marker.title.replace(' ','+');
       //create search url
-      var searchUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=e5ab12886fb2384e5e64692cf37c506a&text='
+      var searchUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=13406652d1a1ae4996e57aa9b96cc051&text='
         + textSearch + '&license=1%2C2%2C3%2C4%2C5%2C6%2C7&content_type=1&lat=' + marker.position.lat()
         + '&lon=' + marker.position.lng() + '&radius=1&radius_units=km&per_page=10&page=1&format=json&nojsoncallback=1';
 
       //console.log(searchUrl);
       $.getJSON(searchUrl)
-        .done(function(data){
+        .done(function(data) {
           parseSearchResults(data);
-
-      })
-      .fail(function(jqxhr, textStatus, error) {
-        console.log(textStatus + ' ' + error);
-      });
+          self.lightboxUrl(self.currentPhotos()[0]);
+          self.lightboxVisible(true);
+        })
+        .fail(function(jqxhr, textStatus, error) {
+          console.log(textStatus + ' ' + error);
+        });
 
       //console.log(model.currentMarker());
       //console.log("get pics " + searchUrl);
     } else {
       console.log("no location chosen");
     }
-  }
+  };
 
   function parseSearchResults(data) {
-    $.each(data.photos.photo, function(i, photo) {
+    ko.utils.arrayForEach(data.photos.photo, function(photo) {
       var photoLink = 'https://farm' + photo.farm + '.staticflickr.com/'
         + photo.server + '/' + photo.id + '_' + photo.secret + '.jpg';
-      self.currentPhotos()[i] = photoLink;
+      self.currentPhotos.push(photoLink);
     });
     //console.log(self.currentPhotos());
   };
 
+  self.closeLightbox = function() {
+    //console.log("index:", self.currentPhotos.indexOf(self.lightboxUrl()));
+    self.currentPhotos.removeAll();
+    self.lightboxVisible(false);
+    self.lightboxUrl('');
+  };
 
+  self.nextPhoto = function() {
+    var i = self.currentPhotos.indexOf(self.lightboxUrl());
+    //console.log(i);
+    if(i !== self.currentPhotos().length-1){
+      self.lightboxUrl(self.currentPhotos()[i+1]);
+    }else{
+      self.lightboxUrl(self.currentPhotos()[0]);
+    }
+  };
+
+  self.prevPhoto = function() {
+    var i = self.currentPhotos.indexOf(self.lightboxUrl());
+    //console.log(i);
+    if(i !== 0) {
+      self.lightboxUrl(self.currentPhotos()[i-1]);
+    }else{
+      self.lightboxUrl(self.currentPhotos()[self.currentPhotos().length-1]);
+    }
+  };
 };
 
 ko.applyBindings(new viewModel());
