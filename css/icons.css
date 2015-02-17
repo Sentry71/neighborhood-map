@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:url('../fonts/icomoon.eot?k7gtkd');
-  src:url('../fonts/icomoon.eot?#iefixk7gtkd') format('embedded-opentype'),
-    url('../fonts/icomoon.woff?k7gtkd') format('woff'),
-    url('../fonts/icomoon.ttf?k7gtkd') format('truetype'),
-    url('../fonts/icomoon.svg?k7gtkd#icomoon') format('svg');
+  src:url('../fonts/icomoon.eot?9xoga8');
+  src:url('../fonts/icomoon.eot?#iefix9xoga8') format('embedded-opentype'),
+    url('../fonts/icomoon.woff?9xoga8') format('woff'),
+    url('../fonts/icomoon.ttf?9xoga8') format('truetype'),
+    url('../fonts/icomoon.svg?9xoga8#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,9 +23,42 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-arrow-up:before {
-  content: "\e60a";
+.icon-arrow-right2:before {
+  content: "\e600";
+  width: 30px;
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  background-color: rgb(44,112,237);
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 29px;
+  text-align: center;
+  text-decoration: none;
 }
+
+.icon-arrow-left2:before {
+  content: "\e601";
+  width: 30px;
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  background-color: rgb(44,112,237);
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 29px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.icon-arrow-up:before {
+  content: "\e602";
+}
+
 .icon-arrow-down:before {
-  content: "\e60b";
+  content: "\e603";
 }

@@ -65,3 +65,47 @@ input {
   left: 50%;
   margin-left: -22px;
 }
+.right {
+  float: right;
+}
+/* lightbox properties */
+.modal {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,.5);
+  z-index: 100;
+}
+.lightbox {
+  /*margin-left: -512px;
+  margin-top: -288px;*/
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  box-shadow: rgba(0,0,0,.5) 4px 4px 10px;
+  z-index: 101;
+}
+.lightbox img {
+  display: block;
+}
+.lightbox a {
+  width: 30px;
+  border-radius: 100px;
+  position: absolute;
+  top:-10px;
+  right: -10px;
+  background-color: rgb(44,112,237);
+  color: #fff;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 20px;
+  line-height: 29px;
+  text-align: center;
+  text-decoration: none;
+}

@@ -1,5 +1,5 @@
 var model = {
-  currentMarker: null,
+  currentMarker: ko.observable(null),
   markers: [
     {
       title: 'The Butterfly House',
@@ -75,7 +75,7 @@ var model = {
 };
 
 var viewModel = function() {
-  var map, bounds, markerArray;
+  //var map, geocoder, bounds, markerArray;
 
   var self = this;
 
@@ -125,6 +125,7 @@ var viewModel = function() {
         self.markerArray()[x].setShape(shape);
         self.markerArray()[x].highlight(false);
       }
+      model.currentMarker(null);
     };
 
     //add markers
@@ -160,23 +161,31 @@ var viewModel = function() {
               infowindow.setContent("<span class='title'>" + that.title
                 + "</span><br>" + address.slice(0,split) + "<br>"
                 + (address.slice(split+1).replace(', USA',''))
-                + "<br><a href=" + that.url + ">" + that.url + "</a>");
+                + "<br><a href=" + that.url + ">" + that.url + "</a><br>"
+                //+ "<span class='right'><img src='https://s.yimg.com/pw/images/goodies/white-flickr.png'/>"
+                );
             }
           } else {
             infowindow.setContent("<span class='title'>" + that.title
-              + "</span><br>" +  "Unable to pull address at this time");
+              + "</span><br>" +  "Unable to pull address at this time"
+              + "<br><a href=" + that.url + ">" + that.url + "</a><br>");
           }
         });
         infowindow.open(map, that);
         clearMarkers();
 
-        this.setIcon(image2);
-        this.setShape(shape2);
-        this.highlight(true);
+        that.setIcon(image2);
+        that.setShape(shape2);
+        that.highlight(true);
+
+        map.panTo(that.position);
+        model.currentMarker(that);
       });
 
-      google.maps.event.addListener(infowindow, 'closeclick', function () {
+      google.maps.event.addListener(infowindow, 'closeclick', function() {
         clearMarkers();
+        //reset map view
+        map.fitBounds(bounds);
       });
 
       bounds.extend(markPos);
@@ -219,6 +228,74 @@ var viewModel = function() {
     self.showList(!self.showList());
   };
 
+  //get Flickr photos to match location
+  self.currentPhotos = ko.observableArray();
+  self.lightboxVisible = ko.observable(false);
+  self.nextArrowVisible = ko.observable(true);
+  self.prevArrowVisible = ko.observable(true);
+  self.lightboxUrl = ko.observable();
+  self.getPictures = function() {
+    var marker = model.currentMarker();
+    if(marker !== null) {
+      var textSearch = marker.title.replace(' ','+');
+      //create search url
+      var searchUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=13406652d1a1ae4996e57aa9b96cc051&text='
+        + textSearch + '&license=1%2C2%2C3%2C4%2C5%2C6%2C7&content_type=1&lat=' + marker.position.lat()
+        + '&lon=' + marker.position.lng() + '&radius=1&radius_units=km&per_page=10&page=1&format=json&nojsoncallback=1';
+
+      //console.log(searchUrl);
+      $.getJSON(searchUrl)
+        .done(function(data) {
+          parseSearchResults(data);
+          self.lightboxUrl(self.currentPhotos()[0]);
+          self.lightboxVisible(true);
+        })
+        .fail(function(jqxhr, textStatus, error) {
+          console.log(textStatus + ' ' + error);
+        });
+
+      //console.log(model.currentMarker());
+      //console.log("get pics " + searchUrl);
+    } else {
+      console.log("no location chosen");
+    }
+  };
+
+  function parseSearchResults(data) {
+    ko.utils.arrayForEach(data.photos.photo, function(photo) {
+      var photoLink = 'https://farm' + photo.farm + '.staticflickr.com/'
+        + photo.server + '/' + photo.id + '_' + photo.secret + '.jpg';
+      self.currentPhotos.push(photoLink);
+    });
+    //console.log(self.currentPhotos());
+  };
+
+  self.closeLightbox = function() {
+    //console.log("index:", self.currentPhotos.indexOf(self.lightboxUrl()));
+    self.currentPhotos.removeAll();
+    self.lightboxVisible(false);
+    self.lightboxUrl('');
+  };
+
+  self.nextPhoto = function() {
+    var i = self.currentPhotos.indexOf(self.lightboxUrl());
+    //console.log(i);
+    if(i !== self.currentPhotos().length-1){
+      self.lightboxUrl(self.currentPhotos()[i+1]);
+    }else{
+      self.lightboxUrl(self.currentPhotos()[0]);
+    }
+  };
+
+  self.prevPhoto = function() {
+    var i = self.currentPhotos.indexOf(self.lightboxUrl());
+    //console.log(i);
+    if(i !== 0) {
+      self.lightboxUrl(self.currentPhotos()[i-1]);
+    }else{
+      self.lightboxUrl(self.currentPhotos()[self.currentPhotos().length-1]);
+    }
+  };
 };
 
 ko.applyBindings(new viewModel());
