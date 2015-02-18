@@ -10,7 +10,7 @@ body {
   height: 100%
 }
 .gm-style-iw{
-    white-space: nowrap;
+  white-space: nowrap;
 }
 .title {
   font-weight: bold;
@@ -41,7 +41,7 @@ ul li {
 #list-toggle {
   float: right;
   padding: 5px;
-  width: 223px;
+  border-radius: 25px;
   text-align: center;
   font-size: 2.0em;
   background-color: rgb(44,112,237);
@@ -61,9 +61,13 @@ input {
 }
 #flickr {
   position: absolute;
+  width: 94px;
+  height: 94px;
   bottom: 10px;
   left: 50%;
-  margin-left: -22px;
+  margin-left: -47px;
+  box-shadow: rgba(0,0,0,.5) 2px 2px 5px;
+  border-radius: 12px;
 }
 .right {
   float: right;
@@ -79,8 +83,6 @@ input {
   z-index: 100;
 }
 .lightbox {
-  /*margin-left: -512px;
-  margin-top: -288px;*/
   position: absolute;
   top: 50%;
   left: 50%;
@@ -95,17 +97,17 @@ input {
   display: block;
 }
 .lightbox a {
-  width: 30px;
-  border-radius: 100px;
+  width: 44px;
+  border-radius: 44px;
   position: absolute;
-  top:-10px;
-  right: -10px;
+  top:-20px;
+  right: -20px;
   background-color: rgb(44,112,237);
   color: #fff;
   font-weight: bold;
   font-family: sans-serif;
-  font-size: 20px;
-  line-height: 29px;
+  font-size: 2.0em;
+  line-height: 43px;
   text-align: center;
   text-decoration: none;
 }
