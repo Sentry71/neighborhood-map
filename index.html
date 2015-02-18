@@ -7,8 +7,8 @@
     <title>Neighborhood Map</title>
     <link href="css/icons.css" rel="stylesheet"></link>
     <link href="css/style.css" rel="stylesheet"></link>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/knockout-3.2.0.min.js"></script>
     <script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyD9x0NjNq08cqACzrapAeq8NCjRhFRrcD4"></script>
   </head>
   <body>
@@ -23,15 +23,15 @@
       </div>
     </div>
     <div id="flickr">
-      <img src="https://s.yimg.com/pw/images/goodies/white-large-chiclet.png" alt="" data-bind="click: getPictures">
+      <img src="img/flickr-color-icon.png" title="View Photos" data-bind="click: getPictures">
     </div>
     <!-- ko if: lightboxVisible -->
     <div class="modal">
       <div class="lightbox">
-        <span class="icon-arrow-left2" data-bind="click: prevPhoto, visible: prevArrowVisible()"></span>
-        <a href=# title="close" data-bind="click: closeLightbox, clickBubble: false">X</a>
+        <span class="icon-arrow-left2" data-bind="click: prevPhoto"></span>
+        <a href=# title="Close" data-bind="click: closeLightbox, clickBubble: false">X</a>
         <img data-bind="attr: {src: lightboxUrl}" />
-        <span class="icon-arrow-right2" data-bind="click: nextPhoto, visible: nextArrowVisible()"></span>
+        <span class="icon-arrow-right2" data-bind="click: nextPhoto"></span>
       </div>
     </div>
     <!-- /ko -->
