@@ -25,3 +25,7 @@ At the bottom the screen is a Flickr icon. When clicked, pictures related to the
 - Google Maps Javascript API
 - Google Maps Geocoding API
 - Flickr API
+
+
+Resources used can be found at this link:
+http://sentry71.github.io/neighborhood-map/resources.md

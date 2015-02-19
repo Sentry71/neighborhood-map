@@ -32,19 +32,19 @@ ul {
 }
 
 ul li {
-  display:block;
-  text-decoration:none;
-  color:#000000;
-  background-color:#FFFFFF;
-  line-height:30px;
-  border-bottom:solid 1px #CCCCCC;
-  padding:0 10px;
-  cursor:pointer;
+  display: block;
+  text-decoration: none;
+  color: #000000;
+  background-color: #FFFFFF;
+  line-height: 30px;
+  border-bottom: solid 1px #CCCCCC;
+  padding: 0 10px;
+  cursor: pointer;
 }
 
 .selected, ul li:hover {
-  color:#FFFFFF;
-  background-color:rgb(44,112,237);
+  color: #FFFFFF;
+  background-color: #2C70ED;
 }
 
 #list-toggle {
@@ -53,7 +53,7 @@ ul li {
   border-radius: 25px;
   text-align: center;
   font-size: 2.0em;
-  background-color: rgb(44,112,237);
+  background-color: #2C70ED;
   color: white;
   cursor: pointer;
 }
@@ -118,7 +118,7 @@ input {
   position: absolute;
   top:-20px;
   right: -20px;
-  background-color: rgb(44,112,237);
+  background-color: #2C70ED;
   color: #fff;
   font-family: sans-serif;
   font-size: 2.0em;
@@ -127,7 +127,7 @@ input {
   text-decoration: none;
 }
 
-@media only screen and (max-width: 400px){
+@media only screen and (max-width: 600px){
   #flickr {
     left: 10px;
     margin-left: 0;
@@ -138,12 +138,10 @@ input {
   }
 
   .lightbox img {
-    width: 300px;
+    width: 100%;
   }
-}
 
-@media only screen and (max-width: 320px){
-  .lightbox img {
-    width: 275px;
+  .lightbox a {
+    right: 0;
   }
 }
