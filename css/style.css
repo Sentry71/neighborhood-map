@@ -1,29 +1,36 @@
 html {
   height: 100%
 }
+
 body {
   height: 100%;
   margin: 0;
   padding: 0
 }
+
 #map-canvas {
   height: 100%
 }
+
 .gm-style-iw{
   white-space: nowrap;
 }
+
 .title {
   font-weight: bold;
 }
+
 #pointList {
   position: fixed;
   right: 10px;
   bottom: 10px;
   font-family: 'Roboto', sans-serif;
 }
+
 ul {
   list-style: none;
 }
+
 ul li {
   display:block;
   text-decoration:none;
@@ -34,10 +41,12 @@ ul li {
   padding:0 10px;
   cursor:pointer;
 }
+
 .selected, ul li:hover {
   color:#FFFFFF;
   background-color:rgb(44,112,237);
 }
+
 #list-toggle {
   float: right;
   padding: 5px;
@@ -48,6 +57,7 @@ ul li {
   color: white;
   cursor: pointer;
 }
+
 input {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -59,20 +69,23 @@ input {
   margin-bottom: -16px;
   width: 86%;
 }
+
 #flickr {
   position: absolute;
-  width: 94px;
-  height: 94px;
+  width: 60px;
+  height: 60px;
   bottom: 10px;
   left: 50%;
-  margin-left: -47px;
+  margin-left: -30px;
   box-shadow: rgba(0,0,0,.5) 2px 2px 5px;
-  border-radius: 12px;
+  border-radius: 10px;
+  cursor: pointer;
 }
+
 .right {
   float: right;
 }
-/* lightbox properties */
+
 .modal {
   width: 100%;
   height: 100%;
@@ -82,6 +95,7 @@ input {
   background-color: rgba(0,0,0,.5);
   z-index: 100;
 }
+
 .lightbox {
   position: absolute;
   top: 50%;
@@ -93,9 +107,11 @@ input {
   box-shadow: rgba(0,0,0,.5) 4px 4px 10px;
   z-index: 101;
 }
+
 .lightbox img {
   display: block;
 }
+
 .lightbox a {
   width: 44px;
   border-radius: 44px;
@@ -104,10 +120,30 @@ input {
   right: -20px;
   background-color: rgb(44,112,237);
   color: #fff;
-  font-weight: bold;
   font-family: sans-serif;
   font-size: 2.0em;
   line-height: 43px;
   text-align: center;
   text-decoration: none;
+}
+
+@media only screen and (max-width: 400px){
+  #flickr {
+    left: 10px;
+    margin-left: 0;
+  }
+
+  .lightbox {
+    box-shadow: none;
+  }
+
+  .lightbox img {
+    width: 300px;
+  }
+}
+
+@media only screen and (max-width: 320px){
+  .lightbox img {
+    width: 275px;
+  }
 }
