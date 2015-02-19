@@ -63,10 +63,10 @@
   content: "\e603";
 }
 
-@media only screen and (max-width: 400px){
+@media only screen and (max-width: 600px){
   .icon-arrow-right2:before {
-    right: -22px;
+    right: 0;
   }
   .icon-arrow-left2:before {
-    left: -22px;
+    left: 0;
   }
