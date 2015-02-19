@@ -2,7 +2,7 @@
   * Includes ten data points for the map, and two custom
   * images for the map markers.
   */
-var model = {
+var Model = {
   currentMarker: ko.observable(null),
   markers: [
     {
@@ -98,15 +98,23 @@ var model = {
   }
 };
 
-var viewModel = function() {
-  var map, geocoder, bounds, infowindow;
+var ViewModel = function() {
   var self = this;
+  var map, geocoder, bounds, infowindow;
 
-  /** Initialize map.
+  self.currentPhotos = ko.observableArray();
+  self.lightboxUrl = ko.observable();
+  self.lightboxVisible = ko.observable(false);
+  self.markerArray = ko.observableArray();
+  self.nextArrowVisible = ko.observable(true);
+  self.prevArrowVisible = ko.observable(true);
+  self.query = ko.observable('');
+  self.showList = ko.observable(true);
+
+  /** Initialize map by creating map markers from the Model data.
     * Function is set as IIFE to kick off immediately.
     */
   var initMap = function() {
-    //create map
     var mapOptions = {
       disableDefaultUI: true
     };
@@ -117,22 +125,18 @@ var viewModel = function() {
       content: null
     });
 
-    /** Add markers to map from the data model.
-      */
-    self.markerArray = ko.observableArray();
-    var markerList = model.markers;
+    var markerList = Model.markers;
     for(var x = 0; x < markerList.length; x++) {
       var markPos = new google.maps.LatLng(
         markerList[x].lat,
         markerList[x].lng
       );
 
-      // Create marker objects
       var marker = new google.maps.Marker({
         position: markPos,
         map: map,
-        icon: model.image,
-        shape: model.shape,
+        icon: Model.image,
+        shape: Model.shape,
         title: markerList[x].title,
         url: markerList[x].url,
         highlight: markerList[x].highlight
@@ -165,21 +169,22 @@ var viewModel = function() {
         clearMarkers();
 
         // Modify marker (and list) to show selected status.
-        that.setIcon(model.image2);
-        that.setShape(model.shape2);
+        that.setIcon(Model.image2);
+        that.setShape(Model.shape2);
         that.highlight(true);
 
-        // Move map viewport to center selected item
+        // Move map viewport to center selected item.
         map.panTo(that.position);
-        model.currentMarker(that);
+        Model.currentMarker(that);
       });
 
       /** Add click event for closing infowindow with X in top right of box.
-        * This function will clear any selected markers, and reset the map to
+        * This function will clear any selected markers, and recenter the map to
         * show all markers on the map.
         */
       google.maps.event.addListener(infowindow, 'closeclick', function() {
         clearMarkers();
+        map.panTo(bounds.getCenter());
         map.fitBounds(bounds);
       });
 
@@ -192,25 +197,15 @@ var viewModel = function() {
     //Resize map to fit all markers, then center map
     map.fitBounds(bounds);
     map.setCenter(bounds.getCenter());
-  }();
 
-  /** Function used to reset all markers to default image, clears color
-    * highlight from the list of locations, and resets the currentMarker variable.
-    */
-  function clearMarkers() {
-    for(var x = 0; x < self.markerArray().length; x++){
-      self.markerArray()[x].setIcon(model.image);
-      self.markerArray()[x].setShape(model.shape);
-      self.markerArray()[x].highlight(false);
-    }
-    model.currentMarker(null);
-  }
+    //Check window size
+    checkWindowSize();
+  }();
 
   /** Knockout computed observable will filter and return items that match
     * the query string input by the user. This list will be used to update the
     * list of locations shown.
     */
-  self.query = ko.observable('');
   self.filteredArray = ko.computed(function() {
     return ko.utils.arrayFilter(self.markerArray(), function(marker) {
       return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) !== -1;
@@ -237,21 +232,13 @@ var viewModel = function() {
   };
 
   //Toggle showing marker list when up/down arrow above list is clicked.
-  self.showList = ko.observable(true);
   self.toggleList = function() {
     self.showList(!self.showList());
   };
 
-  //Set lightbox parameters
-  self.currentPhotos = ko.observableArray();
-  self.lightboxVisible = ko.observable(false);
-  self.nextArrowVisible = ko.observable(true);
-  self.prevArrowVisible = ko.observable(true);
-  self.lightboxUrl = ko.observable();
-
   // Get Flickr photos to match location of selected marker.
   self.getPictures = function() {
-    var marker = model.currentMarker();
+    var marker = Model.currentMarker();
     if(marker !== null) {
       var textSearch = marker.title.replace(' ','+');
 
@@ -282,17 +269,6 @@ var viewModel = function() {
       alert("Choose a location before trying to view photos.");
     }
   };
-
-  /** Take data from flickr JSON call, and form valid JPG links to show photos
-    * when the user clicks on the flickr button at the bottom of the web page.
-    */
-  function parseSearchResults(data) {
-    ko.utils.arrayForEach(data.photos.photo, function(photo) {
-      var photoLink = 'https://farm' + photo.farm + '.staticflickr.com/'
-        + photo.server + '/' + photo.id + '_' + photo.secret + '.jpg';
-      self.currentPhotos.push(photoLink);
-    });
-  }
 
   /** Close the lightbox and clear the currentPhotos array when the 'x' above
     * the photo is clicked.
@@ -328,6 +304,39 @@ var viewModel = function() {
       self.lightboxUrl(self.currentPhotos()[self.currentPhotos().length-1]);
     }
   };
+
+  /** Helper function to take data from flickr JSON call, and form valid JPG links
+    * to show photos when the user clicks on the flickr button at the bottom of
+    * the web page.
+    */
+  function parseSearchResults(data) {
+    ko.utils.arrayForEach(data.photos.photo, function(photo) {
+      var photoLink = 'https://farm' + photo.farm + '.staticflickr.com/'
+        + photo.server + '/' + photo.id + '_' + photo.secret + '.jpg';
+      self.currentPhotos.push(photoLink);
+    });
+  }
+
+  /** Helper function used to reset all markers to default image, clear color
+    * highlight from the list of locations, and reset the currentMarker variable.
+    */
+  function clearMarkers() {
+    for(var x = 0; x < self.markerArray().length; x++){
+      self.markerArray()[x].setIcon(Model.image);
+      self.markerArray()[x].setShape(Model.shape);
+      self.markerArray()[x].highlight(false);
+    }
+    Model.currentMarker(null);
+  }
+
+  /** Helper function to check viewport width, called only on initialization of map.
+    * If lower than 400px (most likely mobile browser), toggle list to collapsed view.
+    */
+  function checkWindowSize() {
+    if($(window).width() < 400){
+      self.showList(false);
+    }
+  };
 };
 
-ko.applyBindings(new viewModel());
+ko.applyBindings(new ViewModel());
