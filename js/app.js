@@ -1,6 +1,5 @@
 /** Data model
-  * Includes ten data points for the map, and two custom
-  * images for the map markers.
+  * Includes ten data points for the map.
   */
 var Model = {
   currentMarker: ko.observable(null),
@@ -75,27 +74,7 @@ var Model = {
       url: 'http://www.worldbirdsanctuary.org',
       highlight: ko.observable(false)
     }
-  ],
-  image: {
-    url: 'img/marker-50.png',
-    size: new google.maps.Size(14, 30),
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(6, 28)
-  },
-  shape: {
-    coords: [1,1,13,1,13,29,1,29],
-    type: 'poly'
-  },
-  image2: {
-    url: 'img/mike-miriam-marker-50.png',
-    size: new google.maps.Size(87, 43),
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(41, 39)
-  },
-  shape2: {
-    coords: [1,1,86,1,86,42,1,42],
-    type: 'poly'
-  }
+  ]
 };
 
 var ViewModel = function() {
@@ -103,8 +82,9 @@ var ViewModel = function() {
   var map, geocoder, bounds, infowindow;
 
   self.currentPhotos = ko.observableArray();
-  self.lightboxUrl = ko.observable();
+  self.lightboxUrl = ko.observable('');
   self.lightboxVisible = ko.observable(false);
+  self.mapUnavailable = ko.observable(false);
   self.markerArray = ko.observableArray();
   self.nextArrowVisible = ko.observable(true);
   self.prevArrowVisible = ko.observable(true);
@@ -115,91 +95,99 @@ var ViewModel = function() {
     * Function is set as IIFE to kick off immediately.
     */
   var initMap = function() {
-    var mapOptions = {
-      disableDefaultUI: true
-    };
-    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-    geocoder = new google.maps.Geocoder();
-    bounds = new google.maps.LatLngBounds();
-    infowindow = new google.maps.InfoWindow({
-      content: null
-    });
-
-    var markerList = Model.markers;
-    for(var x = 0; x < markerList.length; x++) {
-      var markPos = new google.maps.LatLng(
-        markerList[x].lat,
-        markerList[x].lng
-      );
-
-      var marker = new google.maps.Marker({
-        position: markPos,
-        map: map,
-        icon: Model.image,
-        shape: Model.shape,
-        title: markerList[x].title,
-        url: markerList[x].url,
-        highlight: markerList[x].highlight
+    /** Check if Google Maps object exists. If it does, create map. If not, display
+      * error div.
+      */
+    if(typeof window.google === 'object' && typeof window.google.maps === 'object') {
+      var mapOptions = {
+        disableDefaultUI: true
+      };
+      map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+      geocoder = new google.maps.Geocoder();
+      bounds = new google.maps.LatLngBounds();
+      infowindow = new google.maps.InfoWindow({
+        content: null
       });
 
-      /** Add click event listener to create infowindow for each marker object.
-        * Use Google geocoder to pull physical address from lat/lng position data.
-        * If valid data returned, set infowindow with formatted address. If not,
-        * use default "unable to pull address" message.
-        */
-      google.maps.event.addListener(marker, 'click', function() {
-        var that = this;
-        geocoder.geocode({'latLng': that.position}, function(results, status) {
-          if(status == google.maps.GeocoderStatus.OK) {
-            if (results[0]){
-              var address = results[0].formatted_address;
-              var split = address.indexOf(',');
-              infowindow.setContent("<span class='title'>" + that.title +
-                "</span><br>" + address.slice(0,split) + "<br>" +
-                (address.slice(split+1).replace(', USA','')) +
-                "<br><a href=" + that.url + ">" + that.url + "</a><br>");
-            }
-          } else {
-            infowindow.setContent("<span class='title'>" + that.title +
-              "</span><br><<Unable to pull address at this time>><br><a href=" +
-              that.url + ">" + that.url + "</a><br>");
-          }
+      var markerList = Model.markers;
+      for(var x = 0; x < markerList.length; x++) {
+        var markPos = new google.maps.LatLng(
+          markerList[x].lat,
+          markerList[x].lng
+        );
+
+        var marker = new google.maps.Marker({
+          position: markPos,
+          map: map,
+          icon: MarkerOpt.image,
+          shape: MarkerOpt.shape,
+          title: markerList[x].title,
+          url: markerList[x].url,
+          highlight: markerList[x].highlight
         });
-        infowindow.open(map, that);
-        clearMarkers();
 
-        // Modify marker (and list) to show selected status.
-        that.setIcon(Model.image2);
-        that.setShape(Model.shape2);
-        that.highlight(true);
+        /** Add click event listener to create infowindow for each marker object.
+          * Use Google geocoder to pull physical address from lat/lng position data.
+          * If valid data returned, set infowindow with formatted address. If not,
+          * use default "unable to pull address" message.
+          */
+        google.maps.event.addListener(marker, 'click', function() {
+          var that = this;
+          geocoder.geocode({'latLng': that.position}, function(results, status) {
+            if(status == google.maps.GeocoderStatus.OK) {
+              if (results[0]){
+                var address = results[0].formatted_address;
+                var split = address.indexOf(',');
+                infowindow.setContent("<span class='title'>" + that.title +
+                  "</span><br>" + address.slice(0,split) + "<br>" +
+                  (address.slice(split+1).replace(', USA','')) +
+                  "<br><a href=" + that.url + ">" + that.url + "</a><br>");
+              }
+            } else {
+              infowindow.setContent("<span class='title'>" + that.title +
+                "</span><br><<Unable to pull address at this time>><br><a href=" +
+                that.url + ">" + that.url + "</a><br>");
+            }
+          });
+          infowindow.open(map, that);
+          clearMarkers();
 
-        // Move map viewport to center selected item.
-        map.panTo(that.position);
-        Model.currentMarker(that);
-      });
+          // Modify marker (and list) to show selected status.
+          that.setIcon(MarkerOpt.image2);
+          that.setShape(MarkerOpt.shape2);
+          that.highlight(true);
 
-      /** Add click event for closing infowindow with X in top right of box.
-        * This function will clear any selected markers, and recenter the map to
-        * show all markers on the map.
-        */
-      google.maps.event.addListener(infowindow, 'closeclick', function() {
-        clearMarkers();
-        map.panTo(bounds.getCenter());
-        map.fitBounds(bounds);
-      });
+          // Move map viewport to center selected item.
+          map.panTo(that.position);
+          Model.currentMarker(that);
+        });
 
-      // Modify map viewport to include new map marker
-      bounds.extend(markPos);
+        /** Add click event for closing infowindow with X in top right of box.
+          * This function will clear any selected markers, and recenter the map to
+          * show all markers on the map.
+          */
+        google.maps.event.addListener(infowindow, 'closeclick', function() {
+          clearMarkers();
+          map.panTo(bounds.getCenter());
+          map.fitBounds(bounds);
+        });
 
-      //Add marker to array
-      self.markerArray.push(marker);
+        // Modify map viewport to include new map marker
+        bounds.extend(markPos);
+
+        //Add marker to array
+        self.markerArray.push(marker);
+      }
+      //Resize map to fit all markers, then center map
+      map.fitBounds(bounds);
+      map.setCenter(bounds.getCenter());
+
+      //Check window size
+      checkWindowSize();
+    } else {
+      //if no google object found, display error div
+      self.mapUnavailable(true);
     }
-    //Resize map to fit all markers, then center map
-    map.fitBounds(bounds);
-    map.setCenter(bounds.getCenter());
-
-    //Check window size
-    checkWindowSize();
   }();
 
   /** Knockout computed observable will filter and return items that match
@@ -322,8 +310,8 @@ var ViewModel = function() {
     */
   function clearMarkers() {
     for(var x = 0; x < self.markerArray().length; x++){
-      self.markerArray()[x].setIcon(Model.image);
-      self.markerArray()[x].setShape(Model.shape);
+      self.markerArray()[x].setIcon(MarkerOpt.image);
+      self.markerArray()[x].setShape(MarkerOpt.shape);
       self.markerArray()[x].highlight(false);
     }
     Model.currentMarker(null);
@@ -336,7 +324,37 @@ var ViewModel = function() {
     if($(window).width() < 400){
       self.showList(false);
     }
-  };
+  }
+};
+
+/** Custom marker options for Google Maps. These options will change the default
+  * map markers to specific custom images and clickable areas that are defined
+  * by the programmer. Checks against the window.google and window.google.maps
+  * objects are made to prevent display errors if Google Maps is not available.
+  */
+var MarkerOpt = function() {
+  if (window.google && window.google.maps) {
+    image: {
+      url = 'img/marker-50.png',
+      size = new google.maps.Size(14, 30),
+      origin = new google.maps.Point(0, 0),
+      anchor = new google.maps.Point(6, 28)
+    }
+    shape: {
+      coords = [1,1,13,1,13,29,1,29],
+      type = 'poly'
+    }
+    image2: {
+      url = 'img/mike-miriam-marker-50.png',
+      size = new google.maps.Size(87, 43),
+      origin = new google.maps.Point(0, 0),
+      anchor = new google.maps.Point(41, 39)
+    }
+    shape2: {
+      coords = [1,1,86,1,86,42,1,42],
+      type = 'poly'
+    }
+  }
 };
 
 ko.applyBindings(new ViewModel());

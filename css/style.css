@@ -127,6 +127,20 @@ input {
   text-decoration: none;
 }
 
+.no-map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #444;
+  z-index: 102;
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.0em;
+  text-align: center;
+}
+
 @media only screen and (max-width: 600px){
   #flickr {
     left: 10px;
